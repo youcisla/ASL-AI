@@ -2,6 +2,9 @@
 echo Starting ASL Classifier Frontend...
 echo.
 
+REM Change to project root directory (parent of scripts)
+cd /d "%~dp0\.."
+
 REM Navigate to frontend directory
 cd frontend
 

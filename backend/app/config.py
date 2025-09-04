@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     mongo_db: str = "asl_db"
     
     # Model
-    asl_model_path: str = "./models/vgg16_asl_final.keras"
+    asl_model_path: str = "./models/asl_cnn_model.keras"
     labels_path: str = "./models/labels.json"
     
     # API

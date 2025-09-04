@@ -258,35 +258,128 @@ dist/
 dist-ssr/
 
 # ASL AI Project specific
+# =======================
+
 # ML Models (too large for Git, should be stored in Git LFS or external storage)
+# Root level models
 models/*.keras
 models/*.h5
 models/*.pb
 models/*.onnx
 models/saved_model/
+models/*.tflite
+models/*.bin
+models/*.pkl
+models/*.joblib
+
+# Backend models
+backend/models/*.keras
+backend/models/*.h5
+backend/models/*.pb
+backend/models/*.onnx
+backend/models/saved_model/
+backend/models/*.tflite
+backend/models/*.bin
+backend/models/*.pkl
+backend/models/*.joblib
+
+# Notebook models
+notebooks/models/
+notebooks/*.keras
+notebooks/*.h5
+notebooks/best_*.h5
+notebooks/best_*.keras
 
 # Keep model metadata and labels
 !models/labels.json
+!models/model_metadata.json
 !models/README.md
 !models/.gitkeep
+!backend/models/labels.json
+!backend/models/model_metadata.json
+!backend/models/README.md
+!backend/models/.gitkeep
 
-# Uploaded files
+# Training datasets (large files)
+asl_dataset/
+datasets/
+data/raw/
+data/processed/
+*.zip
+*.tar.gz
+*.rar
+
+# Keep dataset structure info
+!asl_dataset/README.md
+!datasets/README.md
+!data/README.md
+
+# Uploaded files and temporary images
 uploads/
+backend/uploads/
+temp_uploads/
 *.jpg
 *.jpeg
 *.png
 *.gif
 *.bmp
 *.webp
+*.svg
+*.tiff
+*.ico
+
+# Keep upload directory structure
+!uploads/.gitkeep
+!backend/uploads/.gitkeep
+!uploads/README.md
+!backend/uploads/README.md
+
+# Training outputs and logs
+training_logs/
+logs/
+*.log
+wandb/
+mlruns/
+.mlflow/
+tensorboard_logs/
+checkpoints/
 
 # Database files
 *.db
 *.sqlite
 *.sqlite3
+mongodb_data/
+mongo-data/
 
-# Logs
-logs/
-*.log
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.env.*
+!.env.example
+
+# Frontend build and dependencies
+frontend/dist/
+frontend/build/
+frontend/node_modules/
+frontend/.next/
+frontend/.nuxt/
+frontend/.vite/
+
+# Backend build and cache
+backend/.pytest_cache/
+backend/htmlcov/
+backend/.coverage
 
 # OS generated files
 .DS_Store
@@ -318,32 +411,40 @@ $RECYCLE.BIN/
 *.tmp
 *.temp
 temp/
+tmp/
 
 # Backup files
 *.bak
 *.backup
 
-# MongoDB data
-data/db/
-mongod.lock
-
-# Redis data
-dump.rdb
-
-# Certificates
+# Certificates and secrets
 *.pem
 *.key
 *.crt
 *.cert
-
-# Machine Learning datasets (often large)
-datasets/
-data/raw/
-data/processed/
+secrets/
+.secrets
+.env.local
+.env.production
 
 # Jupyter notebook checkpoints
 .ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
 
-# Docker volumes and build context
+# Docker
 docker-data/
 .dockerignore
+docker-compose.override.yml
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+test-results/
+.nyc_output/
+
+# Profiling
+*.prof
+profile_output/

@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
 from pydantic.json_schema import JsonSchemaValue
-from pydantic._internal._model_serialization import to_jsonable_python
 from typing import List, Optional, Dict, Any, Annotated
 from datetime import datetime
 from bson import ObjectId
@@ -52,15 +51,16 @@ class Prediction(BaseModel):
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
-        json_encoders={ObjectId: str}
+        json_encoders={ObjectId: str},
+        protected_namespaces=()  # Allow model_ prefixed fields
     )
     
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    upload_id: PyObjectId
+    upload_id: str  # Changed from PyObjectId to str
     top1_label: str
     top1_prob: float
     top3: List[PredictionItem]
-    model_version: str = "vgg16_asl_final"
+    ai_model_version: str = "asl_cnn_model"  # Renamed from model_version
     latency_ms: float
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -73,7 +73,7 @@ class Feedback(BaseModel):
     )
     
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    upload_id: PyObjectId
+    upload_id: str  # Changed from PyObjectId to str
     correct_label: Optional[str] = None
     is_correct: bool
     notes: Optional[str] = None
@@ -101,8 +101,12 @@ class FeedbackRequest(BaseModel):
 
 
 class HealthResponse(BaseModel):
+    model_config = ConfigDict(
+        protected_namespaces=()  # Allow model_ prefixed fields
+    )
+    
     status: str
-    model_loaded: bool
+    ai_model_loaded: bool  # Renamed from model_loaded
     num_labels: int
     db: str
 

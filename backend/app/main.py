@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="ASL Classifier API",
-    description="ASL Hand-Sign Image Classification API using VGG16 Transfer Learning",
+    description="ASL Hand-Sign Image Classification API using Custom CNN Architecture",
     version="1.0.0",
     lifespan=lifespan
 )

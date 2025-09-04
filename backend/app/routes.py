@@ -31,7 +31,7 @@ async def health_check(db: AsyncIOMotorDatabase = Depends(get_database)):
     
     return HealthResponse(
         status="ok",
-        model_loaded=ml_service.is_ready(),
+        ai_model_loaded=ml_service.is_ready(),
         num_labels=ml_service.get_num_labels(),
         db=db_status
     )
@@ -39,9 +39,6 @@ async def health_check(db: AsyncIOMotorDatabase = Depends(get_database)):
 @router.get("/api/labels")
 async def get_labels():
     """Get all available labels"""
-    if not ml_service.is_ready():
-        raise HTTPException(status_code=503, detail="Model not loaded")
-    
     return ml_service.get_labels()
 
 @router.post("/api/predict", response_model=PredictResponse)
@@ -117,8 +114,24 @@ async def predict_image(
             height=height
         )
         
-        result = await db.uploads.insert_one(upload_doc.model_dump(by_alias=True, exclude={"id"}))
-        upload_id = result.inserted_id
+        try:
+            result = await db.uploads.insert_one(upload_doc.model_dump(by_alias=True, exclude={"id"}))
+            upload_id = result.inserted_id
+        except Exception as e:
+            # Handle duplicate key error - find the existing upload
+            if "duplicate key error" in str(e):
+                existing_upload = await db.uploads.find_one({"file_hash": file_hash})
+                if existing_upload:
+                    upload_id = existing_upload["_id"]
+                    # Remove the file we just saved since we're using the existing one
+                    try:
+                        file_path.unlink()
+                    except:
+                        pass
+                else:
+                    raise HTTPException(status_code=500, detail="Database error")
+            else:
+                raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
         
         # Preprocess image for prediction
         start_time = time.time()
@@ -130,7 +143,7 @@ async def predict_image(
         
         # Create prediction record
         prediction_doc = Prediction(
-            upload_id=upload_id,
+            upload_id=str(upload_id),  # Convert ObjectId to string
             top1_label=top3_results[0]["label"],
             top1_prob=top3_results[0]["prob"],
             top3=[
@@ -181,7 +194,7 @@ async def submit_feedback(
         
         # Create feedback record
         feedback_doc = Feedback(
-            upload_id=upload_id,
+            upload_id=str(upload_id),  # Convert ObjectId to string
             is_correct=feedback_data.is_correct,
             correct_label=feedback_data.correct_label,
             notes=feedback_data.notes

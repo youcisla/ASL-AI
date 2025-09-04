@@ -1,0 +1,57 @@
+{
+  "model_name": "ASL CNN Classifier",
+  "version": "1.0",
+  "architecture": "Custom CNN",
+  "input_shape": [
+    64,
+    64,
+    1
+  ],
+  "output_shape": [
+    29
+  ],
+  "classes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "del",
+    "nothing",
+    "space"
+  ],
+  "num_classes": 29,
+  "preprocessing": "Grayscale, resize to 64x64, normalize to 0-1",
+  "training_params": {
+    "image_size": "64x64",
+    "color_mode": "grayscale",
+    "optimizer": "Adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+      "accuracy"
+    ]
+  },
+  "trained_on": "Kaggle",
+  "framework": "TensorFlow/Keras"
+}

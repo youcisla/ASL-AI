@@ -4,6 +4,11 @@ echo ASL Classifier - Complete Installation
 echo ========================================
 echo.
 
+REM Change to project root directory (parent of scripts)
+cd /d "%~dp0\.."
+echo Working directory: %CD%
+echo.
+
 REM Check prerequisites
 echo Checking prerequisites...
 
