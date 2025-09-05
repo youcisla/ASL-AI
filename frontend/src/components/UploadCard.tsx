@@ -53,18 +53,35 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
     }
   };
 
-  const handlePredict = async () => {
+  const handlePredictCNN = async () => {
     if (!file) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
-      const result = await apiService.predictImage(file);
+      const result = await apiService.predictImageCNN(file);
       setPrediction(result);
       onPrediction?.(result);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Prediction failed');
+      setError(err.response?.data?.detail || 'CNN prediction failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePredictVGG = async () => {
+    if (!file) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await apiService.predictImageVGG(file);
+      setPrediction(result);
+      onPrediction?.(result);
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'VGG16 prediction failed');
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +160,12 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
 
               {prediction && (
                 <div className="mt-4">
-                  <h6>Prediction Results:</h6>
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <h6 className="mb-0">Prediction Results:</h6>
+                    <span className={`badge ${prediction.model_type === 'vgg' ? 'bg-success' : 'bg-primary'}`}>
+                      {prediction.model_type === 'vgg' ? 'VGG16' : 'CNN'}
+                    </span>
+                  </div>
                   {prediction.top3.map((item, index) => (
                     <div key={index} className="mb-2">
                       <div className="d-flex justify-content-between align-items-center mb-1">
@@ -187,26 +209,61 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
                 </div>
               )}
 
-              <div className="d-flex gap-2 mt-3">
-                <button
-                  className="btn btn-primary flex-fill"
-                  style={{ background: 'linear-gradient(90deg, var(--accent), var(--accent2))', borderRadius: 'var(--border-radius)', color: '#fff', boxShadow: 'var(--shadow)', border: 'none' }}
-                  onClick={handlePredict}
-                  disabled={isLoading || !!prediction}
-                >
-                  {isLoading ? (
-                    <>
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      Predicting...
-                    </>
-                  ) : (
-                    'Predict'
-                  )}
-                </button>
+              <div className="d-flex flex-column gap-2 mt-3">
+                <div className="d-flex gap-2">
+                  <button
+                    className="btn btn-primary flex-fill"
+                    style={{ 
+                      background: 'linear-gradient(90deg, #007bff, #0056b3)', 
+                      borderRadius: 'var(--border-radius)', 
+                      color: '#fff', 
+                      boxShadow: 'var(--shadow)', 
+                      border: 'none' 
+                    }}
+                    onClick={handlePredictCNN}
+                    disabled={isLoading || !!prediction}
+                  >
+                    {isLoading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        Predicting...
+                      </>
+                    ) : (
+                      'Predict with CNN'
+                    )}
+                  </button>
+                  
+                  <button
+                    className="btn btn-success flex-fill"
+                    style={{ 
+                      background: 'linear-gradient(90deg, #28a745, #1e7e34)', 
+                      borderRadius: 'var(--border-radius)', 
+                      color: '#fff', 
+                      boxShadow: 'var(--shadow)', 
+                      border: 'none' 
+                    }}
+                    onClick={handlePredictVGG}
+                    disabled={isLoading || !!prediction}
+                  >
+                    {isLoading ? (
+                      <>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        Predicting...
+                      </>
+                    ) : (
+                      'Predict with VGG16'
+                    )}
+                  </button>
+                </div>
+                
                 <button
                   className="btn btn-outline-secondary"
                   onClick={handleReset}

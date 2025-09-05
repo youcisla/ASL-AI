@@ -20,18 +20,37 @@ export const apiService = {
     return response.data;
   },
 
-  // Predict image
-  async predictImage(file: File): Promise<PredictResponse> {
+  // Predict image with CNN
+  async predictImageCNN(file: File): Promise<PredictResponse> {
     const formData = new FormData();
     formData.append('image', file);
     
-    const response = await api.post('/api/predict', formData, {
+    const response = await api.post('/api/predict/cnn', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
     
     return response.data;
+  },
+
+  // Predict image with VGG16
+  async predictImageVGG(file: File): Promise<PredictResponse> {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    const response = await api.post('/api/predict/vgg', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  },
+
+  // Predict image (default - backward compatibility)
+  async predictImage(file: File): Promise<PredictResponse> {
+    return this.predictImageCNN(file);
   },
 
   // Submit feedback

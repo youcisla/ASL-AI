@@ -61,6 +61,7 @@ class Prediction(BaseModel):
     top1_prob: float
     top3: List[PredictionItem]
     ai_model_version: str = "asl_cnn_model"  # Renamed from model_version
+    model_type: str = "cnn"  # Add model type field
     latency_ms: float
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -85,6 +86,7 @@ class PredictResponse(BaseModel):
     upload_id: str
     prediction_id: str
     top3: List[PredictionItem]
+    model_type: str = "cnn"  # Add model type to response
     model: Dict[str, Any] = {
         "name": "vgg16_asl_final",
         "input_size": [224, 224],

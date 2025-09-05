@@ -7,6 +7,7 @@ export interface PredictResponse {
   upload_id: string;
   prediction_id: string;
   top3: PredictionItem[];
+  model_type?: string;
   model: {
     name: string;
     input_size: number[];

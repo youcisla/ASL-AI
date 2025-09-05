@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
     await connect_to_mongo()
     
     # Initialize ML service
-    await ml_service.initialize()
+    await ml_service.load_models()
     
     yield
     
