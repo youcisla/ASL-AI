@@ -1,537 +1,543 @@
 # ASL Alphabet Recognition System
 
-A complete machine learning application for American Sign Language (ASL) alphabet recognition using two different deep learning models: a custom CNN and VGG16 transfer learning.
+Un système complet de reconnaissance de l'alphabet de la langue des signes américaine (ASL) utilisant l'apprentissage profond avec deux modèles CNN distincts : un CNN personnalisé et un modèle de transfer learning VGG16.
 
-## Overview
+## Vue d'ensemble
 
-This project provides real-time ASL alphabet recognition through a web interface. Users can upload images of ASL hand signs and get predictions from two different AI models:
+Ce projet fournit une reconnaissance ASL en temps réel via une interface web moderne. Les utilisateurs peuvent télécharger des images de signes ASL et obtenir des prédictions de deux modèles d'IA différents :
 
-- **Custom CNN**: A lightweight, fast model trained from scratch
-- **VGG16 Transfer Learning**: A more accurate model using pre-trained weights
+- **CNN Personnalisé** : Modèle léger et rapide entraîné from scratch (60x60 grayscale)
+- **VGG16 Transfer Learning** : Modèle plus précis utilisant des poids pré-entraînés (224x224 RGB)
 
-## Project Structure
+## Structure du Projet
 
 ```
 ProjetIA/
-├── backend/           # FastAPI backend server
-├── frontend/          # React TypeScript frontend
-├── notebooks/         # Jupyter notebooks for model training
-├── asl_dataset/       # Training and test datasets
-├── scripts/           # Helper scripts for setup and running
-├── tests/             # Test files
-└── uploads/           # Uploaded images storage
+├── backend/               # Serveur FastAPI
+│   ├── app/
+│   │   ├── main.py       # Application FastAPI principale
+│   │   ├── routes.py     # Endpoints API (/health, /predict, /feedback)
+│   │   ├── ml_service.py # Service de machine learning
+│   │   ├── models.py     # Modèles Pydantic
+│   │   ├── config.py     # Configuration et variables d'environnement
+│   │   └── database.py   # Connexion MongoDB
+│   ├── models/           # Modèles entraînés (.keras, .h5, .json)
+│   └── requirements.txt  # Dépendances Python
+├── frontend/             # Interface React TypeScript
+│   ├── src/
+│   │   ├── App.tsx       # Composant principal React
+│   │   ├── api.ts        # Client API Axios
+│   │   ├── components/   # Composants réutilisables
+│   │   └── pages/        # Pages (Home, History)
+│   └── package.json      # Dépendances Node.js
+├── notebooks/            # Notebooks Jupyter pour l'entraînement
+│   └── from-scratch-vgg.ipynb # Pipeline d'entraînement principal
+├── asl_dataset/          # Données d'entraînement et de test
+├── scripts/              # Scripts d'automatisation
+└── image/                # Images pour la documentation
 ```
 
-## Features
+## Captures d'écran
 
-- **Dual Model Prediction**: Choose between CNN or VGG16 models
-- **Real-time Recognition**: Upload and get instant predictions
-- **Model Comparison**: Compare results from both models
-- **Prediction History**: Track previous predictions
-- **Feedback System**: Provide feedback on prediction accuracy
-- **REST API**: Complete API for integration with other applications
+### Interface de l'Application
+![Application Home](image/home.png)
+*Interface principale de l'application de reconnaissance ASL*
 
-## Technology Stack
+### Résultats de Prédiction
+![Prediction Sample](image/sample.png)
+*Exemple de résultats de prédiction ASL avec scores de confiance*
+
+## Fonctionnalités
+
+- **Prédiction Double Modèle** : Choix entre les modèles CNN et VGG16
+- **Reconnaissance en Temps Réel** : Upload et prédictions instantanées
+- **Comparaison de Modèles** : Comparaison des résultats des deux modèles
+- **Historique des Prédictions** : Suivi des prédictions précédentes avec MongoDB
+- **Système de Feedback** : Fournir des commentaires sur la précision des prédictions
+- **API REST Complète** : API complète pour l'intégration avec d'autres applications
+
+## Stack Technologique
 
 ### Backend
-- **FastAPI**: Modern Python web framework
-- **TensorFlow**: Deep learning framework
-- **MongoDB**: Database for storing predictions and feedback
-- **Uvicorn**: ASGI server
+- **FastAPI** : Framework web Python moderne avec documentation automatique
+- **TensorFlow/Keras** : Framework d'apprentissage profond
+- **MongoDB** : Base de données pour stocker prédictions et feedback
+- **OpenCV** : Traitement d'images et préprocessing
+- **Uvicorn** : Serveur ASGI haute performance
 
 ### Frontend
-- **React**: JavaScript library for UI
-- **TypeScript**: Type-safe JavaScript
-- **Bootstrap**: CSS framework
-- **Axios**: HTTP client
+- **React 18** : Bibliothèque JavaScript pour l'interface utilisateur
+- **TypeScript** : JavaScript typé pour plus de sécurité
+- **Bootstrap 5** : Framework CSS pour un design responsive
+- **Axios** : Client HTTP pour les appels API
+- **React Router** : Routage côté client
 
 ### Machine Learning
-- **TensorFlow/Keras**: Model training and inference
-- **OpenCV**: Image processing
-- **NumPy**: Numerical computations
+- **TensorFlow/Keras** : Entraînement et inférence de modèles
+- **OpenCV** : Traitement d'images (cv2.imread, cv2.cvtColor, cv2.resize)
+- **NumPy** : Calculs numériques et manipulation d'arrays
+- **Matplotlib** : Visualisation des courbes d'entraînement
 
-## Prerequisites
+## Prérequis
 
 - Python 3.8+
 - Node.js 16+
-- MongoDB (local or cloud instance)
+- MongoDB (instance locale ou cloud)
 - Git
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Cloner le Dépôt
 
 ```bash
 git clone https://github.com/youcisla/ASL-AI.git
 cd ProjetIA
 ```
 
-### 2. Backend Setup
+### 2. Configuration du Backend
 
 ```bash
-# Navigate to backend directory
+# Naviguer vers le répertoire backend
 cd backend
 
-# Create virtual environment
+# Créer un environnement virtuel
 python -m venv venv
 
-# Activate virtual environment
-# On Windows:
+# Activer l'environnement virtuel
+# Sur Windows :
 venv\Scripts\activate
-# On macOS/Linux:
+# Sur macOS/Linux :
 source venv/bin/activate
 
-# Install dependencies
+# Installer les dépendances
 pip install -r requirements.txt
 ```
 
-### 3. Frontend Setup
+### 3. Configuration du Frontend
 
 ```bash
-# Navigate to frontend directory
+# Naviguer vers le répertoire frontend
 cd frontend
 
-# Install dependencies
+# Installer les dépendances
 npm install
 ```
 
-### 4. Model Setup
+### 4. Configuration des Modèles
 
-Place your trained models in the `backend/models/` directory:
+Placer les modèles entraînés dans le répertoire `backend/models/` :
 
 ```
 backend/models/
-├── custom_cnn_asl_model.keras        # Custom CNN model
-├── custom_cnn_labels.json            # CNN label mapping
-├── vgg16_transfer_asl_final.keras    # VGG16 model
-└── vgg16_transfer_labels.json        # VGG16 label mapping
+├── custom_cnn_asl_model.keras        # Modèle CNN personnalisé
+├── custom_cnn_labels.json            # Mapping des labels CNN
+├── vgg16_transfer_asl_final.keras    # Modèle VGG16
+└── vgg16_transfer_labels.json        # Mapping des labels VGG16
 ```
 
-### 5. Environment Configuration
+### 5. Configuration de l'Environnement
 
-Create a `.env` file in the root directory:
+Créer un fichier `.env` dans le répertoire racine :
 
 ```env
-# Database
-MONGODB_URL=mongodb://localhost:27017
-DATABASE_NAME=asl_classifier
+# Base de données
+MONGO_URI=mongodb://localhost:27017
+MONGO_DB=asl_classifier
 
-# API Configuration
-API_HOST=0.0.0.0
-API_PORT=8000
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
-
-# File Upload
+# Configuration API
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
 MAX_FILE_SIZE_MB=10
-UPLOADS_DIR=uploads
 
-# Model Paths
-ASL_MODEL_PATH=models/custom_cnn_asl_model.keras
-LABELS_PATH=models/custom_cnn_labels.json
+# Chemins des modèles
+CNN_MODEL_PATH=./models/custom_cnn_asl_model.keras
+CNN_LABELS_PATH=./models/custom_cnn_labels.json
+VGG_MODEL_PATH=./models/vgg16_transfer_asl_final.keras
+VGG_LABELS_PATH=./models/vgg16_transfer_labels.json
+
+# Stockage
+UPLOADS_DIR=uploads
 ```
 
-## Running the Application
+## Lancement de l'Application
 
-### Option 1: Using Scripts (Recommended)
+### Option 1 : Utilisation des Scripts (Recommandé)
 
 ```bash
-# Start backend
-./scripts/start_backend.bat    # Windows
+# Démarrer le backend
+.\scripts\start_backend.bat    # Windows
 ./scripts/start_backend.sh     # macOS/Linux
 
-# Start frontend (in a new terminal)
-./scripts/start_frontend.bat   # Windows
+# Démarrer le frontend (dans un nouveau terminal)
+.\scripts\start_frontend.bat   # Windows
 ./scripts/start_frontend.sh    # macOS/Linux
 ```
 
-### Option 2: Manual Commands
+### Option 2 : Commandes Manuelles
 
-#### Start Backend Server
+#### Démarrer le Serveur Backend
 
 ```bash
 cd backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### Start Frontend Development Server
+#### Démarrer le Serveur de Développement Frontend
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-## Usage
+## Utilisation
 
-1. **Access the Application**: Open your browser and go to `http://localhost:5173`
+1. **Accéder à l'Application** : Ouvrir le navigateur sur `http://localhost:5173`
 
-2. **Upload an Image**: 
-   - Drag and drop an ASL alphabet image
-   - Or click to select a file
+2. **Télécharger une Image** : 
+   - Glisser-déposer une image d'alphabet ASL
+   - Ou cliquer pour sélectionner un fichier
 
-3. **Choose Prediction Model**:
-   - Click "Predict with CNN" for fast prediction
-   - Click "Predict with VGG16" for more accurate prediction
+3. **Choisir le Modèle de Prédiction** :
+   - Cliquer "Predict with CNN" pour une prédiction rapide
+   - Cliquer "Predict with VGG16" pour une prédiction plus précise
 
-4. **View Results**:
-   - See top 3 predictions with confidence scores
-   - View processing time
-   - Provide feedback on accuracy
+4. **Voir les Résultats** :
+   - Voir les 3 meilleures prédictions avec scores de confiance
+   - Voir le temps de traitement
+   - Fournir un feedback sur la précision
 
-## API Endpoints
+## Endpoints API
 
-### Health Check
+### Vérification de Santé
 ```
-GET /health
+GET /health                     # État du système et des modèles
 ```
 
-### Predictions
+### Prédictions
 ```
-POST /api/predict/cnn       # Predict using CNN model
-POST /api/predict/vgg       # Predict using VGG16 model
-POST /api/predict           # Default prediction (CNN)
+POST /api/predict/cnn          # Prédiction avec modèle CNN
+POST /api/predict/vgg          # Prédiction avec modèle VGG16
+POST /api/predict              # Prédiction par défaut (CNN)
 ```
 
 ### Labels
 ```
-GET /api/labels             # Get all labels (CNN)
-GET /api/labels/cnn         # Get CNN model labels
-GET /api/labels/vgg         # Get VGG16 model labels
+GET /api/labels                # Obtenir tous les labels (CNN)
+GET /api/labels/cnn            # Obtenir les labels du modèle CNN
+GET /api/labels/vgg            # Obtenir les labels du modèle VGG16
 ```
 
-### Feedback and History
+### Feedback et Historique
 ```
-POST /api/feedback          # Submit prediction feedback
-GET /api/history            # Get prediction history
+POST /api/feedback             # Soumettre un feedback de prédiction
+GET /api/history               # Obtenir l'historique des prédictions
 ```
 
-## Model Training
+## Entraînement des Modèles
 
-The Jupyter notebooks for training models are located in the `notebooks/` directory. These notebooks contain the complete machine learning pipeline from data preprocessing to model deployment.
+Le notebook Jupyter pour l'entraînement des modèles est situé dans `notebooks/from-scratch-vgg.ipynb`. Il contient le pipeline complet d'apprentissage automatique depuis le préprocessing des données jusqu'au déploiement des modèles.
 
-### Available Notebooks
+### Pipeline d'Entraînement Détaillé
 
-#### 1. `from-scratch-vgg.ipynb` - Main Training Pipeline
+#### 1. Chargement des Données (`loadTrsinData`)
 
-This is the primary notebook containing the complete training process for both models. It includes:
-
-**Data Loading and Preprocessing:**
-- Loading ASL alphabet dataset (29 classes: A-Z, space, delete, nothing)
-- Image preprocessing for both model types
-- Data augmentation and normalization
-- Train/validation split (80/20)
-
-**Custom CNN Model:**
-- Architecture: 3 convolutional layers (128→64→32 filters)
-- Input: 60x60 grayscale images
-- Layers: Conv2D + BatchNormalization + MaxPooling2D
-- Dense layers: 256→128→64→29 neurons
-- Dropout for regularization (0.2, 0.15)
-- Training with callbacks (EarlyStopping, ModelCheckpoint)
-
-**VGG16 Transfer Learning Model:**
-- Pre-trained VGG16 base (ImageNet weights)
-- Input: 224x224 RGB images
-- Frozen feature extraction layers
-- Custom classification head: GlobalAveragePooling2D + Dense layers
-- Fine-tuning with lower learning rate (1e-4)
-
-**Model Optimization:**
-- EarlyStopping to prevent overfitting
-- ReduceLROnPlateau for adaptive learning rate
-- ModelCheckpoint to save best models
-- Batch normalization for faster convergence
-
-**Model Evaluation:**
-- Accuracy plots for training/validation
-- Performance comparison between models
-- Prediction latency analysis
-
-**Model Saving:**
-- Automatic saving in multiple formats (.keras, .h5)
-- Label mappings saved as JSON files
-- Model metadata and specifications
-
-#### 2. `asl-alphabet-sign.ipynb` - Data Exploration
-
-**Dataset Analysis:**
-- Statistical overview of the dataset
-- Class distribution analysis
-- Image quality assessment
-- Sample visualization from each class
-
-**Data Preprocessing Experiments:**
-- Different image sizes comparison
-- Color vs grayscale analysis
-- Normalization techniques
-- Augmentation strategies testing
-
-#### 3. `projet-ia.ipynb` - Project Overview
-
-**Methodology Documentation:**
-- Problem definition and approach
-- Literature review and related work
-- Architecture design decisions
-- Experimental setup and parameters
-
-### Training Process Details
-
-#### Step 1: Environment Setup
+**Fonction de Chargement :**
 ```python
-# Required libraries
-import tensorflow as tf
-import numpy as np
-import cv2
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+def loadTrsinData(trainDir, imageWidth, imageHight):
+    classes = os.listdir(trainDir)
+    imagesList = []
+    labels = []
+    for clas in tqdm.tqdm(classes):
+        classesPath = os.path.join(trainDir, clas)
+        for image in os.listdir(classesPath):
+            imgPath = os.path.join(trainDir, clas, image)
+            img = cv2.imread(imgPath)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img = cv2.resize(img, (imageWidth, imageHight))
+            imagesList.append(img)
+            labels.append(clas)
+    return imagesList, labels
 ```
 
-#### Step 2: Data Preparation
-- **Dataset Structure**: 87,000 training images organized in class folders
-- **Image Preprocessing**: Resize, normalize, and reshape for model input
-- **Label Encoding**: Convert class names to categorical format
-- **Data Augmentation**: Rotation, zoom, and shift for better generalization
+**Caractéristiques :**
+- Chargement de ~87,000 images d'entraînement
+- 29 classes ASL (A-Z, space, delete, nothing)
+- Pipeline : BGR → Grayscale → Resize (60x60)
+- Structure : `/trainDir/classe/image.jpg`
 
-#### Step 3: Model Architecture
+#### 2. Exploration des Données (`displaySampleOfData`)
 
-**Custom CNN Architecture:**
-```
-Input Layer (60, 60, 1)
-├── Conv2D(128, 3x3) + BatchNorm + ReLU + MaxPool
-├── Conv2D(64, 3x3) + BatchNorm + ReLU + MaxPool  
-├── Conv2D(32, 3x3) + BatchNorm + ReLU + MaxPool
-├── Flatten
-├── Dense(256) + ReLU + Dropout(0.2)
-├── Dense(128) + ReLU + Dropout(0.15)
-├── Dense(64) + ReLU
-└── Dense(29) + Softmax
-```
-
-**VGG16 Transfer Learning:**
-```
-VGG16 Base (frozen)
-├── GlobalAveragePooling2D
-├── Dense(256) + ReLU + Dropout(0.3)
-├── Dense(128) + ReLU + Dropout(0.2)
-└── Dense(29) + Softmax
-```
-
-#### Step 4: Training Configuration
-
-**Custom CNN Training:**
-- Optimizer: Adam (default learning rate)
-- Loss: Categorical Crossentropy
-- Metrics: Accuracy
-- Epochs: 10 (with early stopping)
-- Batch Size: 32
-- Validation Split: 20%
-
-**VGG16 Training:**
-- Optimizer: Adam (learning rate: 1e-4)
-- Loss: Categorical Crossentropy
-- Callbacks: EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
-- Epochs: 10-12
-- Batch Size: 32
-
-#### Step 5: Model Evaluation
-
-**Performance Metrics:**
-- Training/Validation accuracy curves
-- Loss curves analysis
-- Confusion matrix for detailed class performance
-- Top-3 accuracy for practical usage
-
-**Model Comparison:**
-| Metric | Custom CNN | VGG16 Transfer |
-|--------|------------|----------------|
-| Accuracy | ~85-90% | ~95-98% |
-| Training Time | 30-45 min | 60-90 min |
-| Model Size | ~50 MB | ~500 MB |
-| Inference Speed | Fast | Moderate |
-
-### Running the Training Notebooks
-
-#### Prerequisites
-```bash
-# Install Jupyter and required packages
-pip install jupyter
-pip install tensorflow numpy opencv-python matplotlib seaborn
-```
-
-#### Execution Steps
-
-1. **Start Jupyter Notebook:**
-```bash
-cd notebooks
-jupyter notebook
-```
-
-2. **Configure Data Paths:**
-   - Update data paths to point to your dataset location
-   - Ensure dataset structure matches expected format
-
-3. **Execute Cells Sequentially:**
-   - Run data loading cells first
-   - Execute preprocessing steps
-   - Train Custom CNN model (cells 33-39)
-   - Train VGG16 model (cells 40-47)
-
-4. **Model Output:**
-   - Models saved automatically to `backend/models/` directory
-   - Training logs and plots displayed inline
-   - Performance metrics calculated and displayed
-
-#### Expected Output Files
-
-After successful training, you'll have:
-```
-backend/models/
-├── custom_cnn_asl_model.keras       # Custom CNN model
-├── custom_cnn_asl_model.h5          # Custom CNN (legacy format)
-├── custom_cnn_labels.json           # CNN label mappings
-├── vgg16_transfer_asl_final.keras   # VGG16 final model
-├── vgg16_transfer_asl_final.h5      # VGG16 (legacy format)
-├── vgg16_transfer_asl_best.keras    # VGG16 best checkpoint
-└── vgg16_transfer_labels.json       # VGG16 label mappings
-```
-
-### Notebook Customization
-
-#### Modifying Model Architecture
+**Visualisation :**
 ```python
-# Example: Adding more CNN layers
+def displaySampleOfData(trainDir, imageWidth, imageHight):
+    plt.figure(figsize=(10,15))
+    classes = os.listdir(trainDir)
+    for i,clas in enumerate(classes):
+        plt.subplot(6,5,i+1)
+        # Affichage d'un échantillon de chaque classe
+```
+
+**Objectif :** Grille 6×5 affichant un échantillon de chaque classe ASL pour validation visuelle
+
+#### 3. Préprocessing des Données
+
+**Normalisation et Reshape :**
+```python
+# Mélange pour éviter les biais
+XShuffled, yShuffled = shuffle(X, y, random_state=42)
+
+# Conversion et normalisation
+xtrain = np.array(XShuffled).astype('float32') / 255.0
+xtrainReshaped = xtrain.reshape((87000, 60, 60, 1))
+
+# Encodage des labels
+ytrain = to_categorical(ytrain)
+```
+
+**Étapes clés :**
+- Shuffle avec `random_state=42` pour reproductibilité
+- Normalisation [0,255] → [0,1] pour stabilité d'entraînement
+- Reshape pour format CNN : `(87000, 60, 60, 1)`
+- One-hot encoding pour classification multi-classes
+
+#### 4. Architecture du Modèle CNN Personnalisé
+
+**Structure du Modèle :**
+```python
 Model = Sequential([
-    Conv2D(256, (3,3), activation='relu', input_shape=(60,60,1)),
+    Conv2D(128, (3,3), activation='relu', input_shape=(60,60,1)),
     BatchNormalization(),
     MaxPooling2D((2,2)),
-    # Add your custom layers here
+    Conv2D(64, (3,3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D((2,2)),
+    Conv2D(32, (3,3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D((2,2)),
+    Flatten(),
+    Dense(256, activation='relu'),
+    Dropout(0.2),
+    Dense(128, activation='relu'),
+    Dropout(0.15),
+    Dense(64, activation='relu'),
+    Dense(29, activation='softmax')
 ])
 ```
 
-#### Hyperparameter Tuning
+**Caractéristiques :**
+- 3 couches convolutionnelles (128→64→32 filtres)
+- BatchNormalization après chaque convolution
+- MaxPooling2D pour réduction de dimensionnalité
+- Dropout (0.2, 0.15) pour régularisation
+- Dense layers : 256→128→64→29 neurones
+
+#### 5. Configuration d'Entraînement
+
+**Compilation et Callbacks :**
 ```python
-# Experiment with different parameters
-LEARNING_RATES = [1e-3, 1e-4, 1e-5]
-BATCH_SIZES = [16, 32, 64]
-DROPOUT_RATES = [0.1, 0.2, 0.3]
+Model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+callbacks = [
+    EarlyStopping(patience=3, restore_best_weights=True),
+    ModelCheckpoint("best_custom_cnn.keras", save_best_only=True)
+]
+
+Model.fit(xtrainReshaped, ytrain, validation_split=0.2, epochs=10, callbacks=callbacks)
 ```
 
-#### Data Augmentation
+**Paramètres :**
+- Optimiseur : Adam (adaptatif, momentum intégré)
+- Loss : categorical_crossentropy (optimal pour multi-classes)
+- Validation split : 20% (80% train, 20% validation)
+- EarlyStopping : patience=3 pour éviter l'overfitting
+
+#### 6. Courbes d'Entraînement
+
+![CNN Training Curves](image/curve.png)
+*Courbes d'accuracy du modèle CNN montrant la convergence d'entraînement et de validation*
+
+**Analyse des Performances :**
 ```python
-# Custom augmentation pipeline
-datagen = ImageDataGenerator(
-    rotation_range=10,
-    width_shift_range=0.1,
-    height_shift_range=0.1,
-    zoom_range=0.1,
-    horizontal_flip=False  # ASL signs shouldn't be flipped
-)
+plt.plot(Model.history.history['accuracy'], label='Train Accuracy')
+plt.plot(Model.history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Model Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.grid(True)
+plt.show()
 ```
 
-### Troubleshooting Training
+#### 7. Modèle VGG16 Transfer Learning
 
-**Common Issues:**
+**Architecture VGG16 :**
+```python
+# Base VGG16 pré-entraînée (ImageNet)
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224,224,3))
+for layer in base_model.layers:
+    layer.trainable = False  # Geler les couches
 
-1. **Out of Memory Error:**
-   - Reduce batch size from 32 to 16 or 8
-   - Use CPU training if GPU memory is limited
+# Tête de classification personnalisée
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.3)(x)
+x = Dense(128, activation='relu')(x)
+x = Dropout(0.2)(x)
+predictions = Dense(29, activation='softmax')(x)
+```
 
-2. **Low Accuracy:**
-   - Increase training epochs
-   - Add more data augmentation
-   - Adjust learning rate
+**Différences avec CNN :**
+- Input : 224×224 RGB vs 60×60 grayscale
+- Base pré-entraînée vs from scratch
+- Learning rate : 1e-4 vs défaut Adam
+- Callbacks avancés : ReduceLROnPlateau
 
-3. **Overfitting:**
-   - Increase dropout rates
-   - Add more regularization
-   - Use early stopping
+#### 8. Sauvegarde des Modèles
 
-4. **Training Too Slow:**
-   - Use GPU acceleration
-   - Reduce image resolution
-   - Implement data pipeline optimization
+**Formats Multiples :**
+```python
+# Modèle CNN
+Model.save('custom_cnn_asl_model.keras')
+Model.save('custom_cnn_asl_model.h5')
 
-## Development
+# Modèle VGG16
+model.save('vgg16_transfer_asl_final.keras')
+model.save('vgg16_transfer_asl_final.h5')
 
-### Running Tests
+# Mappings de labels
+with open('custom_cnn_labels.json', 'w') as f:
+    json.dump(label_mapping, f)
+```
+
+**Fichiers Générés :**
+- `.keras` : Format recommandé TensorFlow 2.x
+- `.h5` : Format legacy pour compatibilité
+- `.json` : Mapping index ↔ nom de classe
+
+### Comparaison des Modèles
+
+| Métrique | CNN Personnalisé | VGG16 Transfer |
+|----------|------------------|----------------|
+| Précision | ~85-90% | ~95-98% |
+| Temps d'entraînement | 30-45 min | 60-90 min |
+| Taille du modèle | ~50 MB | ~500 MB |
+| Vitesse d'inférence | Rapide | Modérée |
+| Format d'entrée | 60×60 grayscale | 224×224 RGB |
+| Architecture | 3-layer CNN | VGG16 + Custom Head |
+
+## Tests et Développement
+
+### Lancement des Tests
 
 ```bash
-# Backend tests
+# Tests backend
 cd backend
 pytest
 
-# API tests
+# Tests API
 python tests/test_api.py
+
+# Validation des modèles
+python tests/start_server.py
 ```
 
-### Code Formatting
+### Formatage du Code
 
 ```bash
-# Frontend linting
+# Linting frontend
 cd frontend
 npm run lint
+
+# Formatage TypeScript
+npm run format
 ```
 
-## Troubleshooting
+## Dépannage
 
-### Common Issues
+### Problèmes Communs
 
-1. **Port Already in Use**:
+1. **Port Déjà Utilisé** :
    ```bash
-   # Kill process on port 8000
-   netstat -ano | findstr :8000    # Windows
-   lsof -ti:8000 | xargs kill      # macOS/Linux
+   # Windows
+   netstat -ano | findstr :8000
+   taskkill /PID <PID> /F
+   
+   # macOS/Linux
+   lsof -ti:8000 | xargs kill
    ```
 
-2. **MongoDB Connection Error**:
-   - Ensure MongoDB is running
-   - Check connection string in `.env` file
+2. **Erreur de Connexion MongoDB** :
+   - Vérifier que MongoDB est en cours d'exécution
+   - Vérifier la chaîne de connexion dans `.env`
 
-3. **Model Loading Error**:
-   - Verify model files exist in `backend/models/`
-   - Check file permissions
+3. **Erreur de Chargement de Modèle** :
+   - Vérifier que les fichiers de modèles existent dans `backend/models/`
+   - Vérifier les permissions de fichiers
 
-4. **Dependencies Issues**:
+4. **Problèmes de Dépendances** :
    ```bash
-   # Recreate virtual environment
+   # Recréer l'environnement virtuel
    rm -rf venv
    python -m venv venv
    pip install -r requirements.txt
    ```
 
-## Contributing
+## Déploiement
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+### Production avec Docker
+
+```bash
+# Construire l'image backend
+docker build -t asl-backend ./backend
+
+# Construire l'image frontend
+docker build -t asl-frontend ./frontend
+
+# Lancer avec docker-compose
+docker-compose up -d
+```
+
+### Variables d'Environnement Production
+
+```env
+# Production
+DEBUG=False
+MONGO_URI=mongodb://prod-server:27017
+ALLOWED_ORIGINS=https://your-domain.com
+MAX_FILE_SIZE_MB=5
+```
 
 ## Dataset
 
-The project uses the ASL Alphabet dataset containing:
-- 29 classes (A-Z, space, delete, nothing)
-- 87,000 training images
-- 29 test images
+Le projet utilise le dataset ASL Alphabet contenant :
+- **29 classes** : A-Z, space, delete, nothing
+- **87,000 images d'entraînement** organisées par dossiers de classes
+- **29 images de test** pour validation
+- **Format** : Images JPG de signes de la main ASL
 
-## Performance
+## Contributions
 
-### Model Specifications
+1. Fork le dépôt
+2. Créer une branche de fonctionnalité
+3. Effectuer vos modifications
+4. Ajouter des tests pour les nouvelles fonctionnalités
+5. Soumettre une pull request
 
-| Model | Input Size | Architecture | Accuracy | Speed |
-|-------|------------|--------------|----------|-------|
-| Custom CNN | 60x60 grayscale | 3-layer CNN | ~85% | Fast |
-| VGG16 Transfer | 224x224 RGB | VGG16 + Custom Head | ~95% | Moderate |
+## Licence
 
-## License
+Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Remerciements
 
-## Acknowledgments
-
-- ASL Alphabet dataset from Kaggle
-- TensorFlow and Keras communities
-- FastAPI and React communities
+- Dataset ASL Alphabet de Kaggle
+- Communautés TensorFlow et Keras
+- Communautés FastAPI et React
+- Équipe de développement ASL-AI
 
 ## Contact
 
-For questions or support, please open an issue on GitHub or contact the project maintainers.
+Pour des questions ou du support, veuillez ouvrir une issue sur GitHub ou contacter les mainteneurs du projet.
+
+---
+
+*Développé avec ❤️ pour l'accessibilité et la reconnaissance de la langue des signes*

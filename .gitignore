@@ -328,6 +328,11 @@ temp_uploads/
 *.tiff
 *.ico
 
+# But allow documentation images in image/ directory
+!image/*.png
+!image/*.jpg
+!image/*.jpeg
+
 # Keep upload directory structure
 !uploads/.gitkeep
 !backend/uploads/.gitkeep
