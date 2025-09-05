@@ -1,0 +1,97 @@
+/* Fresh, vibrant, modern theme for ASL-AI */
+:root {
+  --primary-bg: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  --secondary-bg: #fff0f6;
+  --accent: #7c3aed;
+  --accent2: #f472b6;
+  --accent3: #38bdf8;
+  --text-main: #22223b;
+  --text-secondary: #6d6a7c;
+  --card-bg: #fff;
+  --border-radius: 22px;
+  --shadow: 0 6px 32px rgba(124, 58, 237, 0.10);
+}
+body {
+  background: var(--primary-bg);
+  color: var(--text-main);
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+}
+.navbar {
+  background: var(--card-bg) !important;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  border: none;
+  margin-bottom: 2rem;
+}
+.navbar-brand {
+  color: var(--accent) !important;
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: 1.5px;
+}
+.nav-link {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-link.active, .nav-link:hover {
+  color: var(--accent2) !important;
+}
+.card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: none;
+  margin-bottom: 2rem;
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border: none;
+  color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-primary:hover {
+  background: linear-gradient(90deg, var(--accent2), var(--accent3));
+  transform: translateY(-2px) scale(1.03);
+}
+input, textarea, select {
+  background: #f3f0ff;
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+  border: 1.5px solid var(--accent3);
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent2);
+}
+.modal-content {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+.table {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+}
+::-webkit-scrollbar {
+  width: 8px;
+  background: #f3f0ff;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
+.text-read {
+  color: var(--accent) !important;
+  font-weight: 600;
+}
