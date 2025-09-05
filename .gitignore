@@ -262,8 +262,8 @@ dist-ssr/
 
 # ML Models (too large for Git, should be stored in Git LFS or external storage)
 # Root level models
-models/*.keras
-models/*.h5
+# models/*.keras
+# models/*.h5
 models/*.pb
 models/*.onnx
 models/saved_model/
@@ -273,8 +273,8 @@ models/*.pkl
 models/*.joblib
 
 # Backend models
-backend/models/*.keras
-backend/models/*.h5
+# backend/models/*.keras
+# backend/models/*.h5
 backend/models/*.pb
 backend/models/*.onnx
 backend/models/saved_model/
