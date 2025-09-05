@@ -5,9 +5,9 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div className="container">
-        <Link className="navbar-brand" to="/">
+  <nav className="navbar navbar-expand-lg" style={{ boxShadow: 'var(--shadow)', borderRadius: 'var(--border-radius)', background: 'var(--secondary-bg)' }}>
+  <div className="container">
+        <Link className="navbar-brand" to="/" style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.7rem', letterSpacing: '1px' }}>
           <strong>ASL Classifier</strong>
         </Link>
         

@@ -86,15 +86,15 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
 
   return (
     <>
-      <div className="card h-100">
-        <div className="card-header">
-          <h5 className="card-title mb-0">Upload ASL Image</h5>
+  <div className="card h-100 text-read" style={{ background: 'var(--card-bg)', borderRadius: 'var(--border-radius)', boxShadow: 'var(--shadow)', border: 'none' }}>
+  <div className="card-header text-read" style={{ background: 'var(--secondary-bg)', borderRadius: 'var(--border-radius)', color: 'var(--accent)', fontWeight: 600 }}>
+          <h5 className="card-title mb-0" style={{ color: 'var(--accent2)', fontWeight: 700 }}>Upload ASL Image</h5>
         </div>
-        <div className="card-body">
+  <div className="card-body text-read" style={{ color: 'var(--text-main)' }}>
           {!file ? (
             <div
-              className="border-dashed border-3 border-secondary rounded p-5 text-center"
-              style={{ cursor: 'pointer', minHeight: '200px' }}
+              className="border-dashed border-3 rounded p-5 text-center"
+              style={{ borderColor: 'var(--accent2)', background: 'var(--secondary-bg)', color: 'var(--accent2)', cursor: 'pointer', minHeight: '200px' }}
               onClick={() => fileInputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -119,7 +119,7 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
                 <p className="mb-2">
                   <strong>Drag & drop an image here</strong>
                 </p>
-                <p className="text-muted">or click to select a file</p>
+                <p className="text-read" style={{ color: 'var(--accent2)' }}>or click to select a file</p>
               </div>
               <input
                 ref={fileInputRef}
@@ -147,10 +147,10 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
                   {prediction.top3.map((item, index) => (
                     <div key={index} className="mb-2">
                       <div className="d-flex justify-content-between align-items-center mb-1">
-                        <span className={index === 0 ? 'fw-bold' : ''}>
+                        <span className={index === 0 ? 'fw-bold text-read' : 'text-read'} style={{ color: '#fff' }}>
                           {item.label}
                         </span>
-                        <span className="text-muted">
+                        <span className="text-read" style={{ color: '#fff' }}>
                           {formatConfidence(item.prob)}
                         </span>
                       </div>
@@ -190,6 +190,7 @@ const UploadCard: React.FC<UploadCardProps> = ({ onPrediction }) => {
               <div className="d-flex gap-2 mt-3">
                 <button
                   className="btn btn-primary flex-fill"
+                  style={{ background: 'linear-gradient(90deg, var(--accent), var(--accent2))', borderRadius: 'var(--border-radius)', color: '#fff', boxShadow: 'var(--shadow)', border: 'none' }}
                   onClick={handlePredict}
                   disabled={isLoading || !!prediction}
                 >

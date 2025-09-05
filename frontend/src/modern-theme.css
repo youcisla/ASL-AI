@@ -1,0 +1,84 @@
+/* Style pour la lecture du texte en blanc */
+.text-read {
+  color: #fff !important;
+  background: transparent;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+/* Modern theme for ASL-AI frontend */
+:root {
+  --primary-bg: #181f2a;
+  --secondary-bg: #232b3e;
+  --accent: #6c63ff;
+  --accent2: #00c9a7;
+  --text-main: #f5f6fa;
+  --text-secondary: #b2becd;
+  --card-bg: #222b3a;
+  --border-radius: 16px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+body {
+  background: var(--primary-bg);
+  color: var(--text-main);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.navbar {
+  background: var(--secondary-bg) !important;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+}
+.navbar-brand {
+  color: var(--accent) !important;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+.nav-link {
+  color: var(--text-secondary) !important;
+  transition: color 0.2s;
+}
+.nav-link.active, .nav-link:hover {
+  color: var(--accent2) !important;
+}
+.card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: none;
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border: none;
+  color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+.btn-primary:hover {
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+}
+input, textarea, select {
+  background: var(--secondary-bg);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--accent2);
+}
+.modal-content {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+.table {
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: var(--border-radius);
+}
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--secondary-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+}
