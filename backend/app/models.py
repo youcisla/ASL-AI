@@ -83,6 +83,10 @@ class Feedback(BaseModel):
 
 # Request/Response models
 class PredictResponse(BaseModel):
+    model_config = ConfigDict(
+        protected_namespaces=()  # Allow model_ prefixed fields
+    )
+    
     upload_id: str
     prediction_id: str
     top3: List[PredictionItem]
@@ -102,6 +106,11 @@ class FeedbackRequest(BaseModel):
     notes: Optional[str] = None
 
 
+class ModelInfo(BaseModel):
+    loaded: bool
+    labels: int
+
+
 class HealthResponse(BaseModel):
     model_config = ConfigDict(
         protected_namespaces=()  # Allow model_ prefixed fields
@@ -111,6 +120,7 @@ class HealthResponse(BaseModel):
     ai_model_loaded: bool  # Renamed from model_loaded
     num_labels: int
     db: str
+    models: Optional[Dict[str, ModelInfo]] = None
 
 
 class HistoryItem(BaseModel):

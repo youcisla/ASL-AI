@@ -1,6 +1,8 @@
 import json
 import hashlib
 import numpy as np
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow warnings
 import tensorflow as tf
 from PIL import Image
 from typing import List, Dict, Optional, Tuple
@@ -35,23 +37,23 @@ class ModelService:
         """Load the custom CNN model"""
         try:
             # Load CNN labels
-            cnn_labels_path = Path("models/custom_cnn_labels.json")
+            cnn_labels_path = Path(settings.cnn_labels_path)
             if cnn_labels_path.exists():
                 with open(cnn_labels_path, 'r') as f:
                     self.cnn_labels = json.load(f)
                 logger.info(f"CNN labels loaded: {len(self.cnn_labels)} classes")
             else:
-                logger.warning("CNN labels file not found, using default")
+                logger.warning(f"CNN labels file not found: {settings.cnn_labels_path}, using default")
                 self.cnn_labels = self._get_default_labels()
             
             # Load CNN model
-            cnn_model_path = Path("models/custom_cnn_asl_model.keras")
+            cnn_model_path = Path(settings.cnn_model_path)
             if cnn_model_path.exists():
                 self.cnn_model = tf.keras.models.load_model(str(cnn_model_path))
                 self.models_loaded["cnn"] = True
                 logger.info("Custom CNN model loaded successfully")
             else:
-                logger.warning("CNN model file not found")
+                logger.warning(f"CNN model file not found: {settings.cnn_model_path}")
                 self.models_loaded["cnn"] = False
                 
         except Exception as e:
@@ -62,23 +64,41 @@ class ModelService:
         """Load the VGG16 transfer learning model"""
         try:
             # Load VGG16 labels
-            vgg_labels_path = Path("models/vgg16_transfer_labels.json")
+            vgg_labels_path = Path(settings.vgg_labels_path)
             if vgg_labels_path.exists():
                 with open(vgg_labels_path, 'r') as f:
                     self.vgg_labels = json.load(f)
                 logger.info(f"VGG16 labels loaded: {len(self.vgg_labels)} classes")
             else:
-                logger.warning("VGG16 labels file not found, using default")
+                logger.warning(f"VGG16 labels file not found: {settings.vgg_labels_path}, using default")
                 self.vgg_labels = self._get_default_labels()
             
             # Load VGG16 model
-            vgg_model_path = Path("models/vgg16_transfer_asl_final.keras")
+            vgg_model_path = Path(settings.vgg_model_path)
             if vgg_model_path.exists():
-                self.vgg_model = tf.keras.models.load_model(str(vgg_model_path))
-                self.models_loaded["vgg"] = True
-                logger.info("VGG16 transfer learning model loaded successfully")
+                try:
+                    # Try loading with compilation first
+                    self.vgg_model = tf.keras.models.load_model(str(vgg_model_path))
+                    self.models_loaded["vgg"] = True
+                    logger.info("VGG16 transfer learning model loaded successfully")
+                except Exception as compile_error:
+                    logger.warning(f"Failed to load VGG model with compilation: {compile_error}")
+                    try:
+                        # Try loading without compilation
+                        self.vgg_model = tf.keras.models.load_model(str(vgg_model_path), compile=False)
+                        # Manually compile the model
+                        self.vgg_model.compile(
+                            optimizer='adam',
+                            loss='categorical_crossentropy',
+                            metrics=['accuracy']
+                        )
+                        self.models_loaded["vgg"] = True
+                        logger.info("VGG16 model loaded successfully without initial compilation")
+                    except Exception as no_compile_error:
+                        logger.error(f"Failed to load VGG model even without compilation: {no_compile_error}")
+                        self.models_loaded["vgg"] = False
             else:
-                logger.warning("VGG16 model file not found")
+                logger.warning(f"VGG16 model file not found: {settings.vgg_model_path}")
                 self.models_loaded["vgg"] = False
                 
         except Exception as e:
@@ -243,17 +263,19 @@ def preprocess_image_vgg(file_bytes: bytes) -> np.ndarray:
         # Convert to numpy array
         img_array = np.array(image)
         
-        # Normalize to 0-1 range
+        # Convert to float32 and normalize to 0-1 range
         img_array = img_array.astype(np.float32) / 255.0
         
-        # Apply VGG16 preprocessing (mean subtraction)
-        # VGG16 was trained on ImageNet with these mean values
-        mean = np.array([0.485, 0.456, 0.406])
-        std = np.array([0.229, 0.224, 0.225])
-        img_array = (img_array - mean) / std
+        # VGG16 preprocessing (ImageNet standard)
+        # Note: Since we trained with preprocessing_function=preprocess_input from VGG16,
+        # we need to apply the same preprocessing here
+        from tensorflow.keras.applications.vgg16 import preprocess_input
         
-        # Reshape to (1, 224, 224, 3) for VGG16 input
+        # Reshape to add batch dimension
         img_array = img_array.reshape(1, 224, 224, 3)
+        
+        # Apply VGG16 preprocessing (converts 0-1 to -1 to 1 range)
+        img_array = preprocess_input(img_array * 255.0)  # preprocess_input expects 0-255 range
         
         return img_array
         
