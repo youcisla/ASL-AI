@@ -13,9 +13,15 @@ class Settings(BaseSettings):
     mongo_uri: str = "mongodb://localhost:27017"
     mongo_db: str = "asl_db"
     
-    # Model
-    asl_model_path: str = "./models/asl_cnn_model.keras"
-    labels_path: str = "./models/labels.json"
+    # Models
+    cnn_model_path: str = "./models/custom_cnn_asl_model.keras"
+    cnn_labels_path: str = "./models/custom_cnn_labels.json"
+    vgg_model_path: str = "./models/vgg16_transfer_asl_final.keras"
+    vgg_labels_path: str = "./models/vgg16_transfer_labels.json"
+    
+    # Legacy model paths (for backward compatibility)
+    asl_model_path: str = "./models/custom_cnn_asl_model.keras"
+    labels_path: str = "./models/custom_cnn_labels.json"
     
     # API
     allowed_origins: str = "http://localhost:5173"

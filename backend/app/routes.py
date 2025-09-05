@@ -29,11 +29,19 @@ async def health_check(db: AsyncIOMotorDatabase = Depends(get_database)):
     except Exception:
         db_status = "disconnected"
     
+    # Check model status
+    cnn_ready = ml_service.is_ready("cnn")
+    vgg_ready = ml_service.is_ready("vgg")
+    
     return HealthResponse(
         status="ok",
-        ai_model_loaded=ml_service.is_ready("cnn") or ml_service.is_ready("vgg"),
-        num_labels=ml_service.get_num_labels("cnn"),
-        db=db_status
+        ai_model_loaded=cnn_ready or vgg_ready,
+        num_labels=ml_service.get_num_labels("cnn") if cnn_ready else ml_service.get_num_labels("vgg"),
+        db=db_status,
+        models={
+            "cnn": {"loaded": cnn_ready, "labels": ml_service.get_num_labels("cnn") if cnn_ready else 0},
+            "vgg": {"loaded": vgg_ready, "labels": ml_service.get_num_labels("vgg") if vgg_ready else 0}
+        }
     )
 
 @router.get("/api/labels")
